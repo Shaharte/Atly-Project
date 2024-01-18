@@ -26,7 +26,7 @@ app.use('*', (req, res) => {
 
 // Error Middleware
 app.use((err, req, res, next) => {
-  console.log(err);
+  console.log('Error Middleware', err);
   res.status(500).json({ msg: 'something went wrong' });
 });
 
