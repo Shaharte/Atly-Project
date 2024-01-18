@@ -10,8 +10,8 @@ dotenv.config();
 app.use(express.json());
 
 //Routers
-import postRouter from './src/routes/postRouter.js';
-import statistcsRouter from './src/routes/statisticsRouter.js';
+import postRouter from './routes/postRouter.js';
+import statistcsRouter from './routes/statisticsRouter.js';
 app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/statistics', statistcsRouter);
 
