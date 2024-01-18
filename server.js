@@ -1,5 +1,7 @@
+import 'express-async-errors';
 import express from 'express';
 import * as dotenv from 'dotenv';
+import mongoose from 'mongoose';
 
 const app = express();
 dotenv.config();
@@ -22,7 +24,20 @@ app.use('*', (req, res) => {
   res.status(404).json({ msg: 'not found' });
 });
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`server running on PORT ${PORT}....`);
+// Error Middleware
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(500).json({ msg: 'something went wrong' });
 });
+
+const PORT = process.env.PORT || 8080;
+
+try {
+  await mongoose.connect(process.env.MONGO_DB_URI);
+  app.listen(PORT, () => {
+    console.log(`server running on PORT ${PORT}....`);
+  });
+} catch (error) {
+  console.log(error);
+  process.exit(1);
+}
