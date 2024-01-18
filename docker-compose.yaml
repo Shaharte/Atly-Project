@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    volumes:
+      - mongodbdata:/data/db
+    env_file:
+      - ./.env
+    container_name: mongodb
+  app:
+    build: .
+    volumes:
+      - ./src:/app/src
+    ports:
+      - 8080:8080
+    env_file:
+      - ./.env
+    depends_on:
+      - mongodb
+    container_name: nodejs
+volumes:
+  mongodbdata:
