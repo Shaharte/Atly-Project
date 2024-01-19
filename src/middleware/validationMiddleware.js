@@ -26,6 +26,6 @@ export const validatePostInput = withValidationErrors([
     .withMessage('Post creatorId must be a number'),
 ]);
 
-export const validateCreatorIdInParams = withValidationErrors([
+export const validateCreatorId = withValidationErrors([
   param('id').isNumeric().withMessage('Post creatorId must be a number'),
 ]);

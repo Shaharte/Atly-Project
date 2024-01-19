@@ -2,6 +2,7 @@ import 'express-async-errors';
 import express from 'express';
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import cors from 'cors';
 
 //Middlewares
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
@@ -11,6 +12,9 @@ dotenv.config();
 
 //Setup express middleware to accept json
 app.use(express.json());
+
+// Enable CORS
+app.use(cors());
 
 //Routers
 import postRouter from './routes/postRouter.js';
@@ -23,9 +27,9 @@ app.get('/', (req, res) => {
 });
 
 // Not Found Middleware
-// app.use('*', (req, res) => {
-//   res.status(404).json({ msg: 'not found' });
-// });
+app.use('*', (req, res) => {
+  res.status(404).json({ msg: 'not found' });
+});
 
 // Error Middleware
 app.use(errorHandlerMiddleware);
