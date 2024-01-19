@@ -12,7 +12,14 @@ export const createPost = async (req, res) => {
 // GET POST BY ID
 export const getPostsById = async (req, res) => {
   const { id } = req.params;
-  const posts = await Post.find({ creatorId: id });
+  let { start = 0, limit = null } = req.query;
+  start = parseInt(start);
+  limit = parseInt(limit);
+  const posts = await Post.find({ creatorId: id })
+    .sort({ createdAt: -1 }) // Sort by creation date, newest first
+    .skip(start) // Skip the first 'start' posts
+    .limit(limit); // Limit the number of posts
+
   if (!posts.length) {
     throw new NotFoundError(`No posts for creator with id ${id}`);
   }
