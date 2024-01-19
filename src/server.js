@@ -3,6 +3,9 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
+//Middlewares
+import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
+
 const app = express();
 dotenv.config();
 
@@ -25,10 +28,7 @@ app.use('*', (req, res) => {
 });
 
 // Error Middleware
-app.use((err, req, res, next) => {
-  console.log('Error Middleware', err);
-  res.status(500).json({ msg: 'something went wrong' });
-});
+app.use(errorHandlerMiddleware);
 
 const PORT = process.env.PORT || 8080;
 

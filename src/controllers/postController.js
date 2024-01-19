@@ -1,23 +1,26 @@
 import Post from '../models/PostModel.js';
-
-//GET ALL POSTS
-export const getAllPosts = async (req, res) => {
-  res.status(200).json({ msg: 'getAllPosts' });
-};
+import { StatusCodes } from 'http-status-codes';
+import { NotFoundError } from '../errors/customErrors.js';
 
 // CREATE POST
 export const createPost = async (req, res) => {
   const { title, body, creatorId } = req.body;
   const post = await Post.create({ title, body, creatorId });
-  res.status(201).json({ post });
+  res.status(StatusCodes.CREATED).json({ post });
 };
 
 // GET POST BY ID
-export const getPostById = async (req, res) => {
-  res.status(200).json({ msg: 'getPostById' });
+export const getPostsById = async (req, res) => {
+  const { id } = req.params;
+  const posts = await Post.find({ creatorId: id });
+  if (!posts.length) {
+    throw new NotFoundError(`No posts for creator with id ${id}`);
+  }
+  res.status(StatusCodes.OK).json({ posts });
 };
 
 // GET TOTAL POSTS
 export const getTotalPosts = async (req, res) => {
-  res.status(200).json({ msg: 'getTotalPosts' });
+  const documentsCount = await Post.countDocuments();
+  res.status(StatusCodes.OK).json({ documentsCount });
 };
