@@ -6,6 +6,7 @@ import cors from 'cors';
 
 //Middlewares
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
+import notFoundMiddleware from './middleware/notFoundMiddleware.js';
 
 const app = express();
 dotenv.config();
@@ -27,9 +28,7 @@ app.get('/', (req, res) => {
 });
 
 // Not Found Middleware
-app.use('*', (req, res) => {
-  res.status(404).json({ msg: 'not found' });
-});
+app.use('*', notFoundMiddleware);
 
 // Error Middleware
 app.use(errorHandlerMiddleware);
