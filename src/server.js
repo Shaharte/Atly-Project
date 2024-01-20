@@ -23,10 +23,6 @@ import statistcsRouter from './routes/statisticsRouter.js';
 app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/statistics', statistcsRouter);
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
 // Not Found Middleware
 app.use('*', notFoundMiddleware);
 
