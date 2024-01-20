@@ -5,16 +5,18 @@ import {
 } from '../src/controllers/postController.js';
 import Post from '../src/models/PostModel.js';
 import { StatusCodes } from 'http-status-codes';
-import { BadRequestError, NotFoundError } from '../src/errors/customErrors.js';
+import { NotFoundError } from '../src/errors/customErrors.js';
 
 describe('Post Controller', () => {
   let mockRequest;
   let mockResponse;
   let responseObject;
-  let mockFind;
 
   beforeEach(() => {
-    mockRequest = {};
+    mockRequest = {
+      params: {}, // Initialize params as an object
+      query: {}, // Initialize query params as an object
+    };
     mockResponse = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn().mockImplementation((result) => {
@@ -23,16 +25,13 @@ describe('Post Controller', () => {
     };
     Post.countDocuments = jest.fn();
     Post.create = jest.fn();
-    mockFind = {
-      sort: jest.fn().mockReturnThis(),
-      skip: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockReturnThis(),
-      exec: jest.fn().mockResolvedValue(/* mocked data */),
-    };
-    Post.find = jest.fn().mockReturnValue(mockFind);
+    Post.find = jest.fn().mockReturnThis();
+    Post.sort = jest.fn().mockReturnThis();
+    Post.skip = jest.fn().mockReturnThis();
+    Post.limit = jest.fn().mockReturnThis();
+    Post.exec = jest.fn();
   });
 
-  //**** getTotalPosts Tests ****
   describe('getTotalPosts', () => {
     test('getTotalPosts should return status code 200 status and a total number of posts', async () => {
       Post.countDocuments.mockResolvedValue(5);
@@ -51,59 +50,69 @@ describe('Post Controller', () => {
     });
   });
 
-  //**** getPostById Tests ****
+  describe('getPostsById', () => {
+    test('should return status code 200 and retrieve posts successfully', async () => {
+      mockRequest.params.id = 1;
+      mockRequest.query = { start: '1', limit: '5' };
+      let mockPosts = [
+        {
+          _id: '65aa96b0d3fee923e5a18454',
+          title: 'title 1',
+          body: 'body 1',
+          creatorId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          _id: '65aa96add3fee923e5a18452',
+          title: 'title 2',
+          body: 'body 2',
+          creatorId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          _id: '65aa96add3fee923e5a18452',
+          title: 'title 3',
+          body: 'body 3',
+          creatorId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ];
 
-  // test('getPostsById should return status code 200 and retrieve posts successfully', async () => {
-  //   const mockPosts = [
-  //     {
-  //       title: 'title 1',
-  //       body: 'body 1',
-  //       creatorId: 1,
-  //       _id: '1',
-  //       createdAt: new Date(),
-  //       updatedAt: new Date(),
-  //     },
-  //     {
-  //       title: 'title 2',
-  //       body: 'body 2',
-  //       creatorId: 1,
-  //       _id: '2',
-  //       createdAt: new Date(),
-  //       updatedAt: new Date(),
-  //     },
-  //   ];
-  //   mockFind.exec.mockResolvedValue(mockPosts);
-  //   // Mocking Post.find to resolve with mock data
+      Post.exec.mockResolvedValue(mockPosts.slice(1));
 
-  //   mockRequest.params = { id: '1' };
-  //   mockRequest.query = { start: '0', limit: '10' };
+      await getPostsById(mockRequest, mockResponse);
 
-  //   await getPostsById(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(StatusCodes.OK);
+      expect(responseObject).toHaveProperty('posts');
+      expect(responseObject.posts).toEqual(mockPosts.slice(1));
+      expect(Post.find).toHaveBeenCalledWith({ creatorId: 1 });
+      // Check if the sort method is called correctly
+      expect(Post.sort).toHaveBeenCalledWith({ createdAt: -1 });
+      // Check if the skip method is called with the correct start value
+      expect(Post.skip).toHaveBeenCalledWith(1);
+      // Check if the limit method is called with the correct limit value
+      expect(Post.limit).toHaveBeenCalledWith(5);
 
-  //   expect(Post.find).toHaveBeenCalledWith({ creatorId: id });
-  //   expect(mockFind.sort).toHaveBeenCalledWith({ createdAt: -1 });
-  //   expect(mockFind.skip).toHaveBeenCalledWith(start);
-  //   expect(mockFind.limit).toHaveBeenCalledWith(limit);
-  //   expect(mockResponse.status).toHaveBeenCalledWith(StatusCodes.OK);
-  //   expect(responseObject).toEqual({ posts: mockPosts });
-  // });
+      // Add more assertions as necessary
+    });
 
-  // test('getPostsById should throw NotFoundError if no posts are found', async () => {
-  //   Post.find.mockResolvedValue([]); // Mocking Post.find with an empty array
+    test('should throw NotFoundError if no post were found', async () => {
+      mockRequest.params.id = 1;
+      mockRequest.query = { start: '0', limit: '5' };
+      Post.exec.mockResolvedValue([]);
 
-  //   mockRequest.params = { id: 1 };
-  //   mockRequest.query = {};
-  //   mockFind.exec.mockResolvedValue([]);
+      await expect(getPostsById(mockRequest, mockResponse)).rejects.toThrow(
+        NotFoundError
+      );
+      await expect(getPostsById(mockRequest, mockResponse)).rejects.toThrow(
+        `No posts for creator with id 1`
+      );
+    });
+  });
 
-  //   await expect(getPostsById(mockRequest, mockResponse)).rejects.toThrow(
-  //     NotFoundError
-  //   );
-  //   // await expect(getPostsById(mockRequest, mockResponse)).rejects.toThrow(
-  //   //   `No posts for creator with id 123`
-  //   // );
-  // });
-
-  //**** createPost Tests ****
   describe('createPost', () => {
     test('createPost should successfully create a post', async () => {
       const mockedPost = {
