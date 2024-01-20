@@ -1,5 +1,3 @@
-<!-- GETTING STARTED -->
-
 ## Getting Started
 
 To run this Project, please run the following commands
@@ -60,17 +58,21 @@ To run this Project, please run the following commands
    http://localhost:8080/api/v1/statistics/runtimes
    ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+## My DB Selection NoSql MongoDB
 
-<!-- USAGE EXAMPLES -->
+Why MongoDB?
 
-## Usage
+Schema Flexibility: MongoDB's schema-less nature is ideal for handling posts, which may vary in structure. It allows you to easily add or change fields such as title, body, and user information without affecting existing data.
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+Scalability: MongoDB scales horizontally, this is beneficial for a posts database, which can expand rapidly.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+JSON-like Documents: The data format is easy to understand and use. MongoDB stores data in BSON format, which is similar to JSON. This is particularly convenient when dealing with REST APIs.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Performance: MongoDB offers high read/write performance, especially when dealing with large volumes of data and simple queries.
+
+Aggregation Framework: MongoDB's aggregation framework simplifies complex operations like calculating averages run-time top top 10 of post creators.
+
+No Initial Need for Relations: In the current scope of the project, the Post and Statistics models have no direct relationships, making MongoDB a suitable choice due to its non-relational structure.
 
 ## Contact
 
@@ -78,8 +80,16 @@ Shahar Terem Linkdin - [@https://www.linkedin.com/in/shaharterem87]
 
 Project Link: [https://github.com/Shaharte/Atly-Project]
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ## Testing
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+The unit tests cover the core functionalities of my project. I use Jest in this project.
+
+1. Running Tests:
+   ```sh
+   npm run test
+   ```
+
+## Testing Limitations
+
+Important Note: Due to the use of 'express-async-errors', testing the error handling paths functions is currently not feasible in these unit tests.
+This limitation is recognized, and it is recommended to cover these scenarios in integration tests.
