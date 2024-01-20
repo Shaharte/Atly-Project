@@ -1,7 +1,7 @@
 import { body, param, validationResult } from 'express-validator';
-
 import { BadRequestError } from '../errors/customErrors.js';
 
+// handle errors that comes from input validation functions
 const withValidationErrors = (validateValues) => {
   return [
     validateValues,
@@ -16,6 +16,7 @@ const withValidationErrors = (validateValues) => {
   ];
 };
 
+// validation of the post creating request
 export const validatePostInput = withValidationErrors([
   body('title').notEmpty().withMessage('Post title is required'),
   body('body').notEmpty().withMessage('Post body is required'),
@@ -25,6 +26,8 @@ export const validatePostInput = withValidationErrors([
     .isNumeric()
     .withMessage('Post creatorId must be a number'),
 ]);
+
+// validation of the post creating request
 
 export const validateCreatorId = withValidationErrors([
   param('id').isNumeric().withMessage('Post creatorId must be a number'),
