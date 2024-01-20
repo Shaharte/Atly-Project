@@ -6,7 +6,7 @@ const PostSchema = new mongoose.Schema(
     body: String,
     creatorId: Number,
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 export default mongoose.model('Post', PostSchema);

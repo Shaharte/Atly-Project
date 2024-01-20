@@ -9,7 +9,6 @@ export const getTopCreators = async (req, res) => {
     { $sort: { postCount: -1, _id: 1 } },
     { $limit: 10 },
   ]);
-  console.log(topCreators);
   res.status(StatusCodes.OK).json({ topCreators });
 };
 

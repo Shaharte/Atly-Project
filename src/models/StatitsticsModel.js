@@ -13,7 +13,7 @@ const StatisticsSchema = new mongoose.Schema(
       default: null,
     },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 export default mongoose.model('Statistics', StatisticsSchema);
