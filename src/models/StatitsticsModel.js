@@ -4,6 +4,14 @@ const StatisticsSchema = new mongoose.Schema(
   {
     method: String,
     executionTime: Number,
+    isError: {
+      type: Boolean,
+      default: false,
+    },
+    message: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );

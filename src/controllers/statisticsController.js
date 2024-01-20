@@ -16,7 +16,17 @@ export const getTopCreators = async (req, res) => {
 // GET AVARAGE RUNTIME
 export const getAvaragRunTime = async (req, res) => {
   const aggregateResult = await Statitstics.aggregate([
-    { $group: { _id: null, averageTime: { $avg: '$executionTime' } } },
+    {
+      $match: {
+        isError: false, // Only include documents where isError is false
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        averageTime: { $avg: '$executionTime' },
+      },
+    },
   ]);
   const averageRuntime =
     aggregateResult.length > 0 ? aggregateResult[0].averageTime : 0;
