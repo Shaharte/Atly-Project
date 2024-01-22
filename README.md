@@ -11,8 +11,6 @@ To run this Project, please run the following commands
 2. Configure Environment:
    ```sh
    Add a .env file in root folder with the credentials and configuration details provided separately.
-   PORT = 8080
-   MONGO_DB_URI=mongodb+srv://Atly1234:Atly1234@cluster1.ic2k5ah.mongodb.net/AtlyDB?retryWrites=true&w=majority
    ```
 3. Docker Setup:
    ```sh
@@ -35,10 +33,17 @@ To run this Project, please run the following commands
 ### API ENDPOINTS
 
 1. Create a post:
+
    ```js
    POST
+   {
+   "creatorId": number,
+   "title": string,
+   "body": string
+   }
    http://localhost:8080/api/v1/posts
    ```
+
 2. Get posts list by their creation order:
    ```js
    GET
