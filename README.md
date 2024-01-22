@@ -45,10 +45,14 @@ To run this Project, please run the following commands
    ```
 
 2. Get posts list by their creation order:
+
    ```js
    GET
    http://localhost:8080/api/v1/posts/:id
+   query params options: {start, limit}
+
    ```
+
 3. Get the total posts number:
    ```js
    GET
